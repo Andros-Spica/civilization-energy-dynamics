@@ -1,0 +1,333 @@
+---
+title: "Civilization Energy Dynamics"
+---
+
+```{r}
+library(deSolve)
+library(ggplot2)
+```
+
+```{r}
+plotScale = 2
+```
+
+## v1
+
+<https://en.wikipedia.org/wiki/Energy_return_on_investment>
+
+or
+
+![{\\displaystyle ({\\hbox{NetEnergy}}\\div {\\hbox{EnergyExpended}})+1=EROI}](https://wikimedia.org/api/rest_v1/media/math/render/svg/5d6b284ff616a157c6f65e0baa23b1a12ec01d1e)
+
+```{r}
+# parameters
+pars_v1 <- c(
+  km = 0.2, 
+  ki = 0.2, 
+  beta = 0.1, 
+  eroi = 30,
+  delta = 0.0001
+  )
+
+# initial state 
+init_v1 <- c(N = 1, R = 10E3)
+
+# times
+times_v1 <- seq(0, 10000, by = 1)
+```
+
+```{r}
+lv_model_v1 <- function(pars, init_v1, times = times_v1) {
+  # initial state 
+  state <- init_v1
+  # derivative
+  deriv <- function(t, state, pars_v1) {
+    with(as.list(c(state, pars_v1)), {
+      d_N <- km * N * (ki * R * (1 - beta) - N)
+      d_R <- delta - (ki * N / eroi)
+      return(list(c(N = d_N, R = d_R)))
+    })
+  }
+  # solve
+  ode(y = state, times = times_v1, func = deriv, parms = pars_v1)
+}
+lv_results <- data.frame(lv_model_v1(pars = pars_v1, init = init_v1, times = times_v1))
+```
+
+```{r}
+ggplot(data = lv_results, aes(x = time)) +
+  geom_line(data = lv_results, aes(x = time, y = N, color = "N")) +
+  geom_line(data = lv_results, aes(x = time, y = R, color = "R")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  )
+```
+
+## v2
+
+```{r}
+# parameters
+pars_v2 <- c(
+  # E
+  intrinsicGrowthRate = 0.2, 
+  conversionRate = 0.2, 
+  explorationBudgetShare = 0.1, 
+  # R
+  eroi = 30,
+  recoveryRate = 0.0001
+  )
+
+# initial state 
+init_v2 <- c(E = 1, R = 1E4)
+
+# times
+times_v2 <- seq(0, 2000, by = 1)
+```
+
+```{r}
+lv_model_v2 <- function(pars, init = init_v2, times = times_v2) {
+  # initial state 
+  state <- init_v2
+  # derivative
+  deriv <- function(t, state, pars_v2) {
+    with(as.list(c(state, pars_v2)), {
+      Emax = conversionRate * R * (1 - explorationBudgetShare)
+      d_E <- intrinsicGrowthRate * E * (1 - E / Emax)
+      d_R <- recoveryRate - (conversionRate * E / eroi)
+      return(list(c(E = d_E, R = d_R)))
+    })
+  }
+  # solve
+  ode(y = state, times = times_v2, func = deriv, parms = pars_v2)
+}
+lv_results_v2 <- data.frame(lv_model_v2(pars = pars_v2, init = init_v2, times = times_v2))
+```
+
+```{r}
+ggplot(data = lv_results_v2, aes(x = time)) +
+  geom_line(data = lv_results_v2, aes(x = time, y = E, color = "E")) +
+  geom_line(data = lv_results_v2, aes(x = time, y = R, color = "R")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  )
+```
+
+## v3
+
+```{r}
+# parameters
+pars_v3 <- c(
+  # E
+  intrinsicGrowthRate = 0.1, 
+  #conversionRate = c(0.2), 
+  explorationBudgetShare = 0.1, 
+  # R
+  eroi = 30,
+  recoveryRate = 0.0001
+  )
+
+# initial state 
+init_v3 <- c(E = 1, R = 1E4)
+
+# times
+times_v3 <- seq(0, 200, by = 1)
+```
+
+```{r}
+lv_model_v3 <- function(pars, init = init_v3, times = times_v3) {
+  # initial state 
+  state <- init_v3
+  # derivative
+  deriv <- function(t, state, pars_v3) {
+    with(as.list(c(state, pars_v3)), {
+      Einvest = E * (1 - explorationBudgetShare)
+      Egained = Einvest * eroi
+      Eavailable = R / eroi
+      Emax = min(Egained, Eavailable)
+      d_E <- intrinsicGrowthRate * E * (1 - E / Emax)
+      d_R <- recoveryRate - Emax
+      return(list(c(E = d_E, R = d_R)))
+    })
+  }
+  # solve
+  ode(y = state, times = times_v3, func = deriv, parms = pars_v3)
+}
+lv_results_v3 <- data.frame(lv_model_v3(pars = pars_v3, init = init_v3, times = times_v3))
+```
+
+```{r}
+ggplot(data = lv_results_v3, aes(x = time)) +
+  geom_line(data = lv_results_v3, aes(x = time, y = E, color = "E")) +
+  geom_line(data = lv_results_v3, aes(x = time, y = R, color = "R")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  coord_trans(y = "sqrt") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  )
+```
+
+## v4
+
+```{r}
+# parameters
+resourcesNames <- c("fossil", "nuclear", "hydro", "wind", "photo")
+resourcePars <- data.frame(cbind(
+  eroi = c(30, 75, 50, 16, 5),
+  recoveryRate = c(1E-6, 1E-6, 1, 1, 1),
+  init = c(1E4, 1E2, 1E3, 1E5, 1E9)
+  ), row.names = resourcesNames)
+
+paradigmNames <- c("A", "B", "C")
+paradigmPars <- data.frame(cbind(
+  fossil = c(0.8, 0.6, 0),
+  nuclear = c(0, 0.1, 0),
+  hydro = c(0.1, 0.2, 0.2),
+  wind = c(0.1, 0.1, 0.4),
+  photo = c(0, 0, 0.4)
+  ), row.names = paradigmNames)
+
+pars_v4 <- list(
+  # civilization
+  intrinsicGrowthRate = 0.1, 
+  explorationBudgetShare = 0.2,
+  # resources
+  budgetShares = vector(mode = "list", length = length(paradigmNames)),
+  eroi = vector(mode = "list", length = length(resourcesNames)),
+  recoveryRate = vector(mode = "list", length = length(resourcesNames))
+  )
+names(pars_v4$budgetShares) <- paradigmNames
+names(pars_v4$eroi) <- resourcesNames
+names(pars_v4$recoveryRate) <- resourcesNames
+for (resourceName in resourcesNames)
+{
+  pars_v4$eroi[[resourceName]] <- resourcePars[resourceName,]$eroi
+  pars_v4$recoveryRate[[resourceName]] <- resourcePars[resourceName,]$recoveryRate
+}
+for (paradigmName in paradigmNames)
+{
+  for (resourceName in resourcesNames)
+  {
+    pars_v4$budgetShares[[paradigmName]][[resourceName]] <- paradigmPars[paradigmName,][resourceName]
+  }
+}
+
+# initial state 
+init_v4 <- vector(mode = "list", length = length(resourcesNames)+1)
+names(init_v4) <- c("E", resourcesNames)
+init_v4$E <- 1
+for (resourceName in resourcesNames)
+{
+  init_v4[[resourceName]] <- resourcePars[resourceName,]$init
+}
+
+# times
+times_v4 <- seq(0, 200, by = 1)
+```
+
+```{r}
+lv_model_v4 <- function(pars, init = init_v4, times = times_v4, paradigm) {
+  # initial state 
+  state <- unlist(init_v4)
+  # derivative
+  deriv <- function(t, state, pars_v4) {
+    with(as.list(c(state, pars_v4)), {
+      Einvest = E * (1 - explorationBudgetShare)
+      Emax = 0
+      d_R <- vector(mode = "list", length = length(resourcesNames))
+      names(d_R) <- resourcesNames
+      for (resourceName in resourcesNames)
+      {
+        EinvestOnResource = Einvest * budgetShares[[paradigm]][[resourceName]]
+        EgainedByResource = EinvestOnResource * eroi[[resourceName]]
+        EavailableFromResource = state[[resourceName]] / eroi[[resourceName]]
+        EmaxFromResource = min(EgainedByResource, EavailableFromResource)
+        Emax = Emax + EmaxFromResource
+        
+        d_R[[resourceName]] <- recoveryRate[[resourceName]] - EmaxFromResource
+      }
+      
+      d_E <- intrinsicGrowthRate * E * (1 - E / Emax)
+      
+      # if (paradigm < length(paradigmNames) & runif(1) < explorationBudgetShare) {
+      #   paradigm <- paradigm + 1
+      # }
+      #print(paradigm)
+      return(list(c(E = d_E,
+                    fossil = d_R[["fossil"]],
+                    nuclear = d_R[["nuclear"]],
+                    hydro = d_R[["hydro"]],
+                    wind = d_R[["wind"]],
+                    photo = d_R[["photo"]]
+                  ))
+             )
+    })
+  }
+  # solve
+  ode(y = state, times = times_v4, func = deriv, parms = pars_v4)
+}
+
+paradigm <- 1 # index in paradigmNames
+lv_results_v4_paradigm1 <- data.frame(lv_model_v4(pars = pars_v4, init = init_v4, times = times_v4, paradigm = paradigm))
+
+paradigm <- 2
+lv_results_v4_paradigm2 <- data.frame(lv_model_v4(pars = pars_v4, init = init_v4, times = times_v4, paradigm = paradigm))
+
+paradigm <- 3
+lv_results_v4_paradigm3 <- data.frame(lv_model_v4(pars = pars_v4, init = init_v4, times = times_v4, paradigm = paradigm))
+```
+
+```{r}
+ggplot(data = lv_results_v4_paradigm1, aes(x = time)) +
+  geom_line(data = lv_results_v4_paradigm1, aes(x = time, y = E, color = "E")) +
+  geom_line(data = lv_results_v4_paradigm1, aes(x = time, y = fossil, color = "fossil")) +
+  geom_line(data = lv_results_v4_paradigm1, aes(x = time, y = nuclear, color = "nuclear")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  coord_trans(y = "sqrt") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  )
+
+plot
+```
+
+```{r}
+ggplot(data = lv_results_v4_paradigm2, aes(x = time)) +
+  geom_line(data = lv_results_v4_paradigm2, aes(x = time, y = E, color = "E")) +
+  geom_line(data = lv_results_v4_paradigm2, aes(x = time, y = fossil, color = "fossil")) +
+  geom_line(data = lv_results_v4_paradigm2, aes(x = time, y = nuclear, color = "nuclear")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  coord_trans(y = "sqrt") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  )
+
+plot
+```
+
+```{r}
+ggplot(data = lv_results_v4_paradigm3, aes(x = time)) +
+  geom_line(data = lv_results_v4_paradigm3, aes(x = time, y = E, color = "E")) +
+  geom_line(data = lv_results_v4_paradigm3, aes(x = time, y = fossil, color = "fossil")) +
+  geom_line(data = lv_results_v4_paradigm3, aes(x = time, y = nuclear, color = "nuclear")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  coord_trans(y = "sqrt") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  )
+
+plot
+```
