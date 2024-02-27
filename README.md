@@ -2,9 +2,5 @@
 
 by Alex Shenderov and Andreas Angourakis
 
--   \[Quarto notebook\]()
-
-```{=html}
-<!-- -->
-```
--   \[Shiny app\](<https://andros-spica.shinyapps.io/civilizationEnergyDynamicsSolver/>)
+-   [Quarto notebook]()
+-   [Shiny app](https://andros-spica.shinyapps.io/civilizationEnergyDynamicsSolver/)
