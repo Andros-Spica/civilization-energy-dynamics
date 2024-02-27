@@ -144,8 +144,8 @@ lv_model_v3 <- function(pars, init = init_v3, times = times_v3) {
   # initial state 
   state <- init_v3
   # derivative
-  deriv <- function(t, state, pars_v3) {
-    with(as.list(c(state, pars_v3)), {
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
       Einvest = E * (1 - explorationBudgetShare)
       Egained = Einvest * eroi
       Eavailable = R / eroi
