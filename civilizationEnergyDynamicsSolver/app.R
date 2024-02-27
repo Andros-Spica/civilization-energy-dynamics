@@ -32,11 +32,16 @@ lv_model <- function(pars, init = init, times = times) {
     ode(y = state, times = times, func = deriv, parms = pars)
 }
 
+# print today's date
+today <- Sys.Date()
+updateDate <- format(today, format="%d %b %Y")
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
     # Application title
     titlePanel("Civilization Energy Dynamics model"),
+    h4(paste0("by Alex Shenderov and Andreas Angourakis", " (", updateDate, ")")),
 
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
@@ -82,12 +87,12 @@ ui <- fluidPage(
            h4("Model equations (derivates)"),
            withMathJax(),
            fluidRow(
-               column(4,
+               column(6,
                       helpText("Energy flux of a civilization:"),
                       helpText("$$\\frac{dE(t)}{dt}=rE(t)(1 - \\frac{E(t)}{E_{max}(t)})$$"),
                       helpText("$$E_{max}(t)=\\min\\left\\{ EROI(E(t)(1-\\beta)), R(t)/EROI \\right\\}$$")
                ),
-               column(8,
+               column(6,
                       
                       helpText("Resource or energy source (asymptotically available):"),
                       helpText("$$\\frac{dR(t)}{dt}=\\delta - E_{max}(t)$$")
