@@ -1,6 +1,6 @@
-# civilization-energy-dynamics
+# Civilization Energy Dynamics: a semi-stochastic approach
 
-by Alex Shenderov and Andreas Angourakis
+by Andreas Angourakis and Alex Shenderov
 
 -   [Quarto notebook]()
--   [Shiny app](https://andros-spica.shinyapps.io/civilizationEnergyDynamicsSolver/)
+-   [Shiny app - model v3](https://andros-spica.shinyapps.io/civilizationEnergyDynamicsSolver/)

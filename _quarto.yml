@@ -1,5 +1,58 @@
 project:
-  title: "civilizationEnergetics"
+  type: book
+  output-dir: docs
 
 editor: visual
 
+execute: 
+  echo: false
+  warning: false
+
+book:
+  title: "Civilization Energy Dynamics: a semi-stochastic approach"
+  author: # vgl. https://quarto.org/docs/journals/authors.html
+  - name: Andreas Angourakis
+    orcid: 0000-0002-9946-8142
+    email: andros.spica@gmail.com, Andreas.Angourakis@ruhr-uni-bochum.de
+    affiliation: 
+      - name: Institut für Archäologische Wissenschaften, Ruhr-Universität Bochum
+        url: https://www.ruhr-uni-bochum.de/archaeologie
+    attributes:
+      corresponding: true
+      equal-contributor: true
+  - name: Alex Shenderov
+    email: alexshenderov@gmail.com
+    affiliation: 
+      - name: Independent researcher
+    attributes:
+      corresponding: true
+      equal-contributor: true
+  date: today
+  date-format: DD MMMM, YYYY
+  page-navigation: true
+  #site-url: 
+  chapters:
+    - index.qmd
+    - introduction.qmd
+    - part: "Models and scenarios"
+      chapters:
+      - models-malthusian.qmd
+      - models-Bardi.qmd
+      - models-quasi-malthusian.qmd
+    #- part: "Case studies and datasets"
+    #  chapters: 
+    #    - xxx.qmd
+    #    - yyy.qmd
+    #- discussion.qmd
+    #- conclusion.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: lumen
+    fig-format: svg
+    #css: styles.css
+  pdf:
+    documentclass: scrreprt
