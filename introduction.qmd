@@ -1,0 +1,11 @@
+---
+title: "Introduction"
+---
+
+### EROI
+
+<https://en.wikipedia.org/wiki/Energy_return_on_investment>
+
+or
+
+![{\\displaystyle ({\\hbox{NetEnergy}}\\div {\\hbox{EnergyExpended}})+1=EROI}](https://wikimedia.org/api/rest_v1/media/math/render/svg/5d6b284ff616a157c6f65e0baa23b1a12ec01d1e)
