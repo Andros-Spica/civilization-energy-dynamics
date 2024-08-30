@@ -11,270 +11,13 @@ library(ggplot2)
 plotScale = 2
 ```
 
+## Shenderov models
+
 Based on MATHLAB implementation files Quasi_Mathus.m, Mathus2.m, Thetaq.m.
 
-## Quasi-Malthusian model (v1, fix EROI)
+### Shenderov model (v2, increasing EROI)
 
-### Description
-
-$$
-\frac{dN}{dt} = k_{Malthus} * N(t) * (k_{conversion} * (\theta_{cte} - 1) * R(t) - N(t))
-$$
-$$
-\frac{dR}{dt} = \delta - N(t)
-$$
-
-*Variables*:
-
-$N$: flux value
-
-$R$: reserve of the critical resource
-
-$k_{Malthus}$: Malthusian rate constant
-
-$k_{conversion}$: critical resource conversion rate constant
-
-$\theta_{cte}$: EROI value for critical resource
-
-$\delta$: replenishment rate of the critical resource
-
-### Implementation
-
-```{r}
-# parameters
-qm1_pars <- c(
-  k_Malthus = 1, 
-  k_conversion = 1, 
-  theta_cte = 3,
-  delta = 0
-  )
-
-qm1_pars_text <- paste(names(qm1_pars), qm1_pars, sep = " = ", collapse = "\n")
-
-# initial state 
-qm1_init <- c(N = 1, R = 300)
-
-# times
-qm1_times <- seq(0, 5, by = 0.001)
-```
-
-```{r}
-qm1_model <- function(pars, init, times = times) {
-  # initial state 
-  state <- init
-  # derivative
-  deriv <- function(t, state, pars) {
-    with(as.list(c(state, pars)), {
-      d_N <- k_Malthus * N * (k_conversion * (theta_cte - 1) * R - N)
-      d_R <- delta - N
-      return(list(c(N = d_N, R = d_R)))
-    })
-  }
-  # solve
-  ode(y = state, times = times, func = deriv, parms = pars)
-}
-qm1_results <- data.frame(qm1_model(pars = qm1_pars, init = qm1_init, times = qm1_times))
-```
-
-```{r}
-maxX = qm1_results$time[length(qm1_results$time)]
-maxY = max(c(qm1_results$N, qm1_results$R))
-
-ggplot(data = qm1_results, aes(x = time)) +
-  geom_line(data = qm1_results, aes(x = time, y = N, color = "N")) +
-  geom_line(data = qm1_results, aes(x = time, y = R, color = "R")) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  theme_bw() +
-  theme(
-    axis.title = element_text(size = plotScale * 10),
-    axis.text = element_text(size = plotScale * 10)
-  ) +
-  annotate("text",
-           x = 0.7 * maxX, 
-           y = 0.8 * maxY,
-           label = qm1_pars_text, 
-           size = 5, 
-           hjust = 0, 
-           vjust = 1) +
-  ggtitle("Quasi-Malthusian model - v1: fix EROI")
-```
-
-## Quasi-Malthusian model (v1.1, fix EROI, N-R back conversion)
-
-### Description
-
-$$
-\frac{dN}{dt} = k_{Malthus} * N(t) * (k_{conversion} * (\theta_{cte} - 1) * R(t) - N(t))
-$$
-$$
-\frac{dR}{dt} = \delta - \frac{N(t)}{k_{conversion} * (\theta_{cte} - 1)}
-$$
-
-*Variables*:
-
-$N$: flux value
-
-$R$: reserve of the critical resource
-
-$k_{Malthus}$: Malthusian rate constant
-
-$k_{conversion}$: critical resource conversion rate constant
-
-$\theta_{cte}$: EROI value for critical resource
-
-$\delta$: replenishment rate of the critical resource
-
-### Implementation
-
-```{r}
-# parameters
-qm11_pars <- c(
-  k_Malthus = 1, 
-  k_conversion = 1, 
-  theta_cte = 3,
-  delta = 0
-  )
-
-qm11_pars_text <- paste(names(qm11_pars), qm11_pars, sep = " = ", collapse = "\n")
-
-# initial state 
-qm11_init <- c(N = 1, R = 300)
-
-# times
-qm11_times <- seq(0, 5, by = 0.001)
-```
-
-```{r}
-qm11_model <- function(pars, init, times = times) {
-  # initial state 
-  state <- init
-  # derivative
-  deriv <- function(t, state, pars) {
-    with(as.list(c(state, pars)), {
-      d_N <- k_Malthus * N * (k_conversion * (theta_cte - 1) * R - N)
-      d_R <- delta - N / (k_conversion * (theta_cte - 1))
-      return(list(c(N = d_N, R = d_R)))
-    })
-  }
-  # solve
-  ode(y = state, times = times, func = deriv, parms = pars)
-}
-qm11_results <- data.frame(qm11_model(pars = qm11_pars, init = qm11_init, times = qm11_times))
-```
-
-```{r}
-maxX = qm11_results$time[length(qm11_results$time)]
-maxY = max(c(qm11_results$N, qm11_results$R))
-
-ggplot(data = qm11_results, aes(x = time)) +
-  geom_line(data = qm11_results, aes(x = time, y = N, color = "N")) +
-  geom_line(data = qm11_results, aes(x = time, y = R, color = "R")) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  theme_bw() +
-  theme(
-    axis.title = element_text(size = plotScale * 10),
-    axis.text = element_text(size = plotScale * 10)
-  ) +
-  annotate("text",
-           x = 0.7 * maxX, 
-           y = 0.8 * maxY,
-           label = qm11_pars_text, 
-           size = 5, 
-           hjust = 0, 
-           vjust = 1) +
-  ggtitle("Quasi-Malthusian model - v1.1: fix EROI, N-R back conversion")
-```
-
-## Quasi-Malthusian model (v1.2, fix EROI, N-R back conversion, logistic)
-
-### Description
-
-$$
-\frac{dN}{dt} = k_{Malthus} * N(t) * (1 - \frac{N(t)}{k_{conversion} * (\theta_{cte} - 1) * R(t)})
-$$
-$$
-\frac{dR}{dt} = \delta - \frac{N(t)}{k_{conversion} * (\theta_{cte} - 1)}
-$$
-
-*Variables*:
-
-$N$: flux value
-
-$R$: reserve of the critical resource
-
-$k_{Malthus}$: Malthusian rate constant
-
-$k_{conversion}$: critical resource conversion rate constant
-
-$\theta_{cte}$: EROI value for critical resource
-
-$\delta$: replenishment rate of the critical resource
-
-### Implementation
-
-```{r}
-# parameters
-qm12_pars <- c(
-  k_Malthus = 1, 
-  k_conversion = 1, 
-  theta_cte = 3,
-  delta = 0
-  )
-
-qm12_pars_text <- paste(names(qm12_pars), qm12_pars, sep = " = ", collapse = "\n")
-
-# initial state 
-qm12_init <- c(N = 1, R = 300)
-
-# times
-qm12_times <- seq(0, 10, by = 0.1)
-```
-
-```{r}
-qm12_model <- function(pars, init, times = times) {
-  # initial state 
-  state <- init
-  # derivative
-  deriv <- function(t, state, pars) {
-    with(as.list(c(state, pars)), {
-      N_max = k_conversion * (theta_cte - 1) * R
-      d_N <- k_Malthus * N * (1 - N / N_max)
-      d_R <- delta - N / (k_conversion * (theta_cte - 1))
-      return(list(c(N = d_N, R = d_R)))
-    })
-  }
-  # solve
-  ode(y = state, times = times, func = deriv, parms = pars)
-}
-qm12_results <- data.frame(qm12_model(pars = qm12_pars, init = qm12_init, times = qm12_times))
-```
-
-```{r}
-maxX = qm12_results$time[length(qm12_results$time)]
-maxY = max(c(qm12_results$N, qm12_results$R))
-
-ggplot(data = qm12_results, aes(x = time)) +
-  geom_line(data = qm12_results, aes(x = time, y = N, color = "N")) +
-  geom_line(data = qm12_results, aes(x = time, y = R, color = "R")) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  theme_bw() +
-  theme(
-    axis.title = element_text(size = plotScale * 10),
-    axis.text = element_text(size = plotScale * 10)
-  ) +
-  annotate("text",
-           x = 0.7 * maxX, 
-           y = 0.8 * maxY,
-           label = qm12_pars_text, 
-           size = 5, 
-           hjust = 0, 
-           vjust = 1) +
-  ggtitle("Quasi-Malthusian model - v1.2: fix EROI, N-R back conversion, logisticn")
-```
-
-## Quasi-Malthusian model (v2, increasing EROI)
-
-### Description
+#### Description
 
 $$
 \frac{dN}{dt} = k_{Malthus} * N(t) * (k_{conversion} * (\theta_{t} - 1) * R(t) - N(t))
@@ -314,7 +57,7 @@ $\delta$: replenishment rate of the critical resource
 
 $R_0$: initial reserve of the critical resource
 
-### Implementation
+#### Implementation
 
 ```{r}
 # parameters
@@ -377,12 +120,12 @@ ggplot(data = qm2_results, aes(x = time)) +
            size = 5, 
            hjust = 0, 
            vjust = 1) +
-  ggtitle("Quasi-Malthusian model - v2: increasing EROI")
+  ggtitle("Shenderov model - v2: increasing EROI")
 ```
 
-## Quasi-Malthusian model (v2.2, increasing EROI, N-R back conversion, logistic)
+### Shenderov model (v2.2, increasing EROI, N-R back conversion, logistic)
 
-### Description
+#### Description
 
 $$
 \frac{dN}{dt} = k_{Malthus} * N(t) * (1 - \frac{N(t)}{k_{conversion} * (\theta_t - 1) * R(t)})
@@ -422,7 +165,7 @@ $\delta$: replenishment rate of the critical resource
 
 $R_0$: initial reserve of the critical resource
 
-### Implementation
+#### Implementation
 
 ```{r}
 # parameters
@@ -485,12 +228,12 @@ ggplot(data = qm22_results, aes(x = time)) +
            size = 5, 
            hjust = 0, 
            vjust = 1) +
-  ggtitle("Quasi-Malthusian model - v2.2: increasing EROI, N-R back conversion, logistic")
+  ggtitle("Shenderov model - v2.2: increasing EROI, N-R back conversion, logistic")
 ```
 
 ---
 
-## v2
+### v2
 
 ```{r}
 # parameters
@@ -542,7 +285,7 @@ ggplot(data = lv_results_v2, aes(x = time)) +
   )
 ```
 
-## v3
+### v3
 
 ```{r}
 # parameters
@@ -602,7 +345,7 @@ ggplot(data = lv_results_v3, aes(x = time)) +
 
 # Exploration duds
 
-## v4
+### v4
 
 ```{r}
 # parameters

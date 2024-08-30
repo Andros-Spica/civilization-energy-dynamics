@@ -1,3 +1,822 @@
 ---
 title: "Mathusian models"
 ---
+
+```{r}
+library(deSolve)
+library(ggplot2)
+```
+
+```{r}
+plotScale = 2
+```
+
+## Logistic models
+
+See overview of logistic models in @tsoularis_analysis_2002.
+
+### Verhulst-Pearl model
+
+#### Description
+
+$$
+\frac{dN}{dt} = r \cdot N(t) \cdot \left(1 - \frac{N(t)}{K}\right)
+$$
+
+*Variables*:
+
+$N$: population
+
+$K$: carrying capacity of the environment for the population
+
+$r$: intrinsic growth rate
+
+#### Implementation
+
+```{r}
+# parameters
+pearlVerhulst_pars <- c(
+  r = 0.1, 
+  K = 100
+  )
+
+pearlVerhulst_pars_text <- paste(names(pearlVerhulst_pars), pearlVerhulst_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+pearlVerhulst_init <- c(N = 10)
+
+# times
+pearlVerhulst_times <- seq(0, 120, by = 0.001)
+```
+
+```{r}
+pearlVerhulst_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_N <- r * N * (1 - N / K)
+      return(list(c(N = d_N)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+pearlVerhulst_results <- data.frame(pearlVerhulst_model(pars = pearlVerhulst_pars, init = pearlVerhulst_init, times = pearlVerhulst_times))
+```
+
+```{r}
+maxX = pearlVerhulst_results$time[length(pearlVerhulst_results$time)]
+maxY = max(c(pearlVerhulst_results$N, pearlVerhulst_results$R))
+
+ggplot(data = pearlVerhulst_results, aes(x = time)) +
+  geom_line(data = pearlVerhulst_results, aes(x = time, y = N)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = pearlVerhulst_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("Verhulst-Pearl model")
+```
+
+### Turner et alle model
+
+#### Description
+
+$$
+\frac{dN}{dt} = r \cdot N(t)^{(1 + \beta(1-\gamma))} \cdot \left(1 - \left(\frac{N(t)}{K}\right) ^ \beta\right) ^ \gamma
+$$
+
+*Variables*:
+
+$N$: population
+
+$K$: carrying capacity of the environment for the population
+
+$r$: intrinsic growth rate
+
+$\beta$: exponential effect 2 (`B`)
+
+$\gamma$: exponential effect 3 (`C`)
+
+#### Implementation
+
+```{r}
+# parameters
+turner_pars <- c(
+  r = 0.1, 
+  K = 100,
+  B = 5,
+  C = 1
+  )
+
+turner_pars_text <- paste(names(turner_pars), turner_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+turner_init <- c(N = 10)
+
+# times
+turner_times <- seq(0, 120, by = 0.001)
+```
+
+```{r}
+turner_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      A = (1 + B * (1 - C))
+      d_N <- r * (N ^ A) * (1 - (N / K) ^ B) ^ C
+      return(list(c(N = d_N)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+turner_results <- data.frame(turner_model(pars = turner_pars, init = turner_init, times = turner_times))
+```
+
+```{r}
+maxX = turner_results$time[length(turner_results$time)]
+maxY = max(c(turner_results$N, turner_results$R))
+
+ggplot(data = turner_results, aes(x = time)) +
+  geom_line(data = turner_results, aes(x = time, y = N)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = turner_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("Turner et alle model")
+```
+
+### Blumberg model
+
+#### Description
+
+$$
+\frac{dN}{dt} = r \cdot N(t)^\alpha \cdot \left(1 - \frac{N(t)}{K}\right) ^ \gamma
+$$
+
+*Variables*:
+
+$N$: population
+
+$K$: carrying capacity of the environment for the population
+
+$r$: intrinsic growth rate
+
+$\alpha$: exponential effect 1 (`A`)
+
+$\gamma$: exponential effect 3 (`C`)
+
+#### Implementation
+
+```{r}
+# parameters
+blumberg_pars <- c(
+  r = 0.1, 
+  K = 100,
+  A = 1.5,
+  C = 2.5
+  )
+
+blumberg_pars_text <- paste(names(blumberg_pars), blumberg_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+blumberg_init <- c(N = 10)
+
+# times
+blumberg_times <- seq(0, 120, by = 0.001)
+```
+
+```{r}
+blumberg_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_N <- r * (N ^ A) * (1 - N / K) ^ C
+      return(list(c(N = d_N)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+blumberg_results <- data.frame(blumberg_model(pars = blumberg_pars, init = blumberg_init, times = blumberg_times))
+```
+
+```{r}
+maxX = blumberg_results$time[length(blumberg_results$time)]
+maxY = max(c(blumberg_results$N, blumberg_results$R))
+
+ggplot(data = blumberg_results, aes(x = time)) +
+  geom_line(data = blumberg_results, aes(x = time, y = N)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = blumberg_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("Blumberg model")
+```
+
+### Von Bertalanffy model
+
+#### Description
+
+$$
+\frac{dN}{dt} = r \cdot N(t) ^ {2/3} \cdot \left(1 - \left(\frac{N(t)}{K}\right) ^ {(1/3)} \right)
+$$
+
+*Variables*:
+
+$N$: population
+
+$K$: carrying capacity of the environment for the population
+
+$r$: intrinsic growth rate
+
+#### Implementation
+
+```{r}
+# parameters
+vonBertalanffy_pars <- c(
+  r = 0.1, 
+  K = 100,
+  A_cte = round(2 / 3, digits = 4),
+  B_cte = round(1 / 3, digits = 4)
+  )
+
+vonBertalanffy_pars_text <- paste(names(vonBertalanffy_pars), vonBertalanffy_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+vonBertalanffy_init <- c(N = 10)
+
+# times
+vonBertalanffy_times <- seq(0, 120, by = 0.001)
+```
+
+```{r}
+vonBertalanffy_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_N <- r * (N ^ A_cte) * (1 - (N / K) ^ B_cte)
+      return(list(c(N = d_N)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+vonBertalanffy_results <- data.frame(vonBertalanffy_model(pars = vonBertalanffy_pars, init = vonBertalanffy_init, times = vonBertalanffy_times))
+```
+
+```{r}
+maxX = vonBertalanffy_results$time[length(vonBertalanffy_results$time)]
+maxY = max(c(vonBertalanffy_results$N, vonBertalanffy_results$R))
+
+ggplot(data = vonBertalanffy_results, aes(x = time)) +
+  geom_line(data = vonBertalanffy_results, aes(x = time, y = N)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = vonBertalanffy_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("Von Bertalanffy model")
+```
+
+### Richards model
+
+#### Description
+
+$$
+\frac{dN}{dt} = r \cdot N(t) \cdot \left(1 - \left(\frac{N(t)}{K}\right) ^ \beta\right)
+$$
+
+*Variables*:
+
+$N$: population
+
+$K$: carrying capacity of the environment for the population
+
+$r$: intrinsic growth rate
+
+$\beta$: exponential effect 2 (`B`)
+
+
+#### Implementation
+
+```{r}
+# parameters
+richards_pars <- c(
+  r = 0.1, 
+  K = 100,
+  B = 6
+  )
+
+richards_pars_text <- paste(names(richards_pars), richards_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+richards_init <- c(N = 10)
+
+# times
+richards_times <- seq(0, 120, by = 0.001)
+```
+
+```{r}
+richards_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_N <- r * N * (1 - (N / K) ^ B)
+      return(list(c(N = d_N)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+richards_results <- data.frame(richards_model(pars = richards_pars, init = richards_init, times = richards_times))
+```
+
+```{r}
+maxX = richards_results$time[length(richards_results$time)]
+maxY = max(c(richards_results$N, richards_results$R))
+
+ggplot(data = richards_results, aes(x = time)) +
+  geom_line(data = richards_results, aes(x = time, y = N)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = richards_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("Richards model")
+```
+
+### Gompertz model
+
+#### Description
+
+$$
+\frac{dN}{dt} = \frac{r}{\beta^\gamma} \cdot N(t) \cdot \left(1 - \left(\frac{N(t)}{K}\right) ^ \beta\right) ^ \gamma
+$$
+
+*Variables*:
+
+$N$: population
+
+$K$: carrying capacity of the environment for the population
+
+$r$: intrinsic growth rate
+
+$\beta$: exponential effect 2 (`B`)
+
+$\gamma$: exponential effect 3 (`C`)
+
+#### Implementation
+
+```{r}
+# parameters
+gompertz_pars <- c(
+  r = 0.1, 
+  K = 100,
+  B = 0.5,
+  C = 2.5
+  )
+
+gompertz_pars_text <- paste(names(gompertz_pars), gompertz_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+gompertz_init <- c(N = 10)
+
+# times
+gompertz_times <- seq(0, 120, by = 0.001)
+```
+
+```{r}
+gompertz_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_N <- (r / (B ^ C)) * N * (1 - (N / K) ^ B) ^ C
+      return(list(c(N = d_N)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+gompertz_results <- data.frame(gompertz_model(pars = gompertz_pars, init = gompertz_init, times = gompertz_times))
+```
+
+```{r}
+maxX = gompertz_results$time[length(gompertz_results$time)]
+maxY = max(c(gompertz_results$N, gompertz_results$R))
+
+ggplot(data = gompertz_results, aes(x = time)) +
+  geom_line(data = gompertz_results, aes(x = time, y = N)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = gompertz_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("Gompertz model")
+```
+
+### Generalized logistic or Tsoularis model
+
+#### Description
+
+$$
+\frac{dN}{dt} = r \cdot N(t) ^ \alpha \cdot \left(1 - \left(\frac{N(t)}{K}\right) ^ \beta\right) ^ \gamma
+$$
+
+*Variables*:
+
+$N$: population
+
+$K$: carrying capacity of the environment for the population
+
+$r$: intrinsic growth rate
+
+$\alpha$: exponential effect 1 (`A`) - important when $\beta$ is low
+
+$\beta$: exponential effect 2 (`B`) - most important
+
+$\gamma$: exponential effect 3 (`C`) - least important
+
+#### Implementation
+
+```{r}
+# parameters
+generalisedLogistic_pars <- c(
+  r = 0.1, 
+  K = 100,
+  A = 1,
+  B = 0.5,
+  C = 2
+  )
+
+generalisedLogistic_pars_text <- paste(names(generalisedLogistic_pars), generalisedLogistic_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+generalisedLogistic_init <- c(N = 10)
+
+# times
+generalisedLogistic_times <- seq(0, 120, by = 0.001)
+```
+
+```{r}
+generalisedLogistic_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_N <- r * (N ^ A) * (1 - (N / K) ^ B) ^ C
+      return(list(c(N = d_N)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+generalisedLogistic_results <- data.frame(generalisedLogistic_model(pars = generalisedLogistic_pars, init = generalisedLogistic_init, times = generalisedLogistic_times))
+```
+
+```{r}
+maxX = generalisedLogistic_results$time[length(generalisedLogistic_results$time)]
+maxY = max(c(generalisedLogistic_results$N, generalisedLogistic_results$R))
+
+ggplot(data = generalisedLogistic_results, aes(x = time)) +
+  geom_line(data = generalisedLogistic_results, aes(x = time, y = N)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = generalisedLogistic_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("Generalised Logistic model")
+```
+
+
+## Shenderov models
+
+Based on MATHLAB implementation files Quasi_Mathus.m, Mathus2.m, Thetaq.m.
+
+### Shenderov model (v1, fix EROI)
+
+#### Description
+
+$$
+\frac{dN}{dt} = k_{Malthus} \cdot N(t) \cdot (k_{conversion} \cdot (\theta_{cte} - 1) \cdot R(t) - N(t))
+$$ $$
+\frac{dR}{dt} = \delta - N(t)
+$$
+
+*Variables*:
+
+$N$: flux value
+
+$R$: reserve of the critical resource
+
+$k_{Malthus}$: Malthusian rate constant
+
+$k_{conversion}$: critical resource conversion rate constant
+
+$\theta_{cte}$: EROI value for critical resource
+
+$\delta$: replenishment rate of the critical resource
+
+#### Implementation
+
+```{r}
+# parameters
+shenderov_v1_pars <- c(
+  k_Malthus = 1, 
+  k_conversion = 1, 
+  theta_cte = 3,
+  delta = 0
+  )
+
+shenderov_v1_pars_text <- paste(names(shenderov_v1_pars), shenderov_v1_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+shenderov_v1_init <- c(N = 1, R = 300)
+
+# times
+shenderov_v1_times <- seq(0, 5, by = 0.001)
+```
+
+```{r}
+shenderov_v1_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_N <- k_Malthus * N * (k_conversion * (theta_cte - 1) * R - N)
+      d_R <- delta - N
+      return(list(c(N = d_N, R = d_R)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+shenderov_v1_results <- data.frame(shenderov_v1_model(pars = shenderov_v1_pars, init = shenderov_v1_init, times = shenderov_v1_times))
+```
+
+```{r}
+maxX = shenderov_v1_results$time[length(shenderov_v1_results$time)]
+maxY = max(c(shenderov_v1_results$N, shenderov_v1_results$R))
+
+ggplot(data = shenderov_v1_results, aes(x = time)) +
+  geom_line(data = shenderov_v1_results, aes(x = time, y = N, color = "N")) +
+  geom_line(data = shenderov_v1_results, aes(x = time, y = R, color = "R")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = shenderov_v1_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("Shenderov model - v1: fix EROI")
+```
+
+### Shenderov model (v1.1, fix EROI, N-R back conversion)
+
+#### Description
+
+$$
+\frac{dN}{dt} = k_{Malthus} \cdot N(t) \cdot (k_{conversion} \cdot (\theta_{cte} - 1) \cdot R(t) - N(t))
+$$ $$
+\frac{dR}{dt} = \delta - \frac{N(t)}{k_{conversion} \cdot (\theta_{cte} - 1)}
+$$
+
+*Variables*:
+
+$N$: flux value
+
+$R$: reserve of the critical resource
+
+$k_{Malthus}$: Malthusian rate constant
+
+$k_{conversion}$: critical resource conversion rate constant
+
+$\theta_{cte}$: EROI value for critical resource
+
+$\delta$: replenishment rate of the critical resource
+
+#### Implementation
+
+```{r}
+# parameters
+shenderov_v1a_pars <- c(
+  k_Malthus = 1, 
+  k_conversion = 1, 
+  theta_cte = 3,
+  delta = 0
+  )
+
+shenderov_v1a_pars_text <- paste(names(shenderov_v1a_pars), shenderov_v1a_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+shenderov_v1a_init <- c(N = 1, R = 300)
+
+# times
+shenderov_v1a_times <- seq(0, 5, by = 0.001)
+```
+
+```{r}
+shenderov_v1a_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_N <- k_Malthus * N * (k_conversion * (theta_cte - 1) * R - N)
+      d_R <- delta - N / (k_conversion * (theta_cte - 1))
+      return(list(c(N = d_N, R = d_R)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+shenderov_v1a_results <- data.frame(shenderov_v1a_model(pars = shenderov_v1a_pars, init = shenderov_v1a_init, times = shenderov_v1a_times))
+```
+
+```{r}
+maxX = shenderov_v1a_results$time[length(shenderov_v1a_results$time)]
+maxY = max(c(shenderov_v1a_results$N, shenderov_v1a_results$R))
+
+ggplot(data = shenderov_v1a_results, aes(x = time)) +
+  geom_line(data = shenderov_v1a_results, aes(x = time, y = N, color = "N")) +
+  geom_line(data = shenderov_v1a_results, aes(x = time, y = R, color = "R")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = shenderov_v1a_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("Shenderov model - v1.1: fix EROI, N-R back conversion")
+```
+
+### Shenderov model (v1.2, fix EROI, N-R back conversion, logistic)
+
+#### Description
+
+$$
+\frac{dN}{dt} = k_{Malthus} \cdot N(t) \cdot (1 - \frac{N(t)}{k_{conversion} \cdot (\theta_{cte} - 1) \cdot R(t)})
+$$ $$
+\frac{dR}{dt} = \delta - \frac{N(t)}{k_{conversion} \cdot (\theta_{cte} - 1)}
+$$
+
+*Variables*:
+
+$N$: flux value
+
+$R$: reserve of the critical resource
+
+$k_{Malthus}$: Malthusian rate constant
+
+$k_{conversion}$: critical resource conversion rate constant
+
+$\theta_{cte}$: EROI value for critical resource
+
+$\delta$: replenishment rate of the critical resource
+
+#### Implementation
+
+```{r}
+# parameters
+shenderov_v1b_pars <- c(
+  k_Malthus = 1, 
+  k_conversion = 1, 
+  theta_cte = 3,
+  delta = 0
+  )
+
+shenderov_v1b_pars_text <- paste(names(shenderov_v1b_pars), shenderov_v1b_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+shenderov_v1b_init <- c(N = 1, R = 300)
+
+# times
+shenderov_v1b_times <- seq(0, 10, by = 0.1)
+```
+
+```{r}
+shenderov_v1b_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      N_max = k_conversion * (theta_cte - 1) * R
+      d_N <- k_Malthus * N * (1 - N / N_max)
+      d_R <- delta - N / (k_conversion * (theta_cte - 1))
+      return(list(c(N = d_N, R = d_R)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+shenderov_v1b_results <- data.frame(shenderov_v1b_model(pars = shenderov_v1b_pars, init = shenderov_v1b_init, times = shenderov_v1b_times))
+```
+
+```{r}
+maxX = shenderov_v1b_results$time[length(shenderov_v1b_results$time)]
+maxY = max(c(shenderov_v1b_results$N, shenderov_v1b_results$R))
+
+ggplot(data = shenderov_v1b_results, aes(x = time)) +
+  geom_line(data = shenderov_v1b_results, aes(x = time, y = N, color = "N")) +
+  geom_line(data = shenderov_v1b_results, aes(x = time, y = R, color = "R")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = shenderov_v1b_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("Shenderov model - v1.2: fix EROI, N-R back conversion, logistic")
+```
