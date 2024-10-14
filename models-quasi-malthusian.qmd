@@ -1,6 +1,4 @@
----
-title: "Quasi-Mathusian models"
----
+# Quasi-Mathusian models
 
 ```{r}
 library(deSolve)
