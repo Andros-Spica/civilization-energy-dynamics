@@ -1,0 +1,152 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Civilization Energy Dynamics: a semi-stochastic approach",
+    "section": "",
+    "text": "Summary",
+    "crumbs": [
+      "Summary"
+    ]
+  },
+  {
+    "objectID": "introduction.html",
+    "href": "introduction.html",
+    "title": "1  Introduction",
+    "section": "",
+    "text": "1.1 EROI\nhttps://en.wikipedia.org/wiki/Energy_return_on_investment\nor",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "introduction.html#eroi",
+    "href": "introduction.html#eroi",
+    "title": "1  Introduction",
+    "section": "",
+    "text": "{\\displaystyle ({\\hbox{NetEnergy}}\\div {\\hbox{EnergyExpended}})+1=EROI}",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "models-malthusian.html",
+    "href": "models-malthusian.html",
+    "title": "2  Mathusian models",
+    "section": "",
+    "text": "2.1 Logistic models\nSee overview of logistic models in Tsoularis and Wallace (2002).",
+    "crumbs": [
+      "Models and scenarios",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Mathusian models</span>"
+    ]
+  },
+  {
+    "objectID": "models-malthusian.html#logistic-models",
+    "href": "models-malthusian.html#logistic-models",
+    "title": "2  Mathusian models",
+    "section": "",
+    "text": "2.1.1 Verhulst-Pearl model\n\n2.1.1.1 Description\n\\[\n\\frac{dN}{dt} = r \\cdot N(t) \\cdot \\left(1 - \\frac{N(t)}{K}\\right)\n\\]\nVariables:\n\\(N\\): population\n\\(K\\): carrying capacity of the environment for the population\n\\(r\\): intrinsic growth rate\n\n\n2.1.1.2 Implementation\n\n\n\n\n\n\n\n\n\n\n\n\n2.1.2 Turner et alle model\n\n2.1.2.1 Description\n\\[\n\\frac{dN}{dt} = r \\cdot N(t)^{(1 + \\beta(1-\\gamma))} \\cdot \\left(1 - \\left(\\frac{N(t)}{K}\\right) ^ \\beta\\right) ^ \\gamma\n\\]\nVariables:\n\\(N\\): population\n\\(K\\): carrying capacity of the environment for the population\n\\(r\\): intrinsic growth rate\n\\(\\beta\\): exponential effect 2 (B)\n\\(\\gamma\\): exponential effect 3 (C)\n\n\n2.1.2.2 Implementation\n\n\n\n\n\n\n\n\n\n\n\n\n2.1.3 Blumberg model\n\n2.1.3.1 Description\n\\[\n\\frac{dN}{dt} = r \\cdot N(t)^\\alpha \\cdot \\left(1 - \\frac{N(t)}{K}\\right) ^ \\gamma\n\\]\nVariables:\n\\(N\\): population\n\\(K\\): carrying capacity of the environment for the population\n\\(r\\): intrinsic growth rate\n\\(\\alpha\\): exponential effect 1 (A)\n\\(\\gamma\\): exponential effect 3 (C)\n\n\n2.1.3.2 Implementation\n\n\n\n\n\n\n\n\n\n\n\n\n2.1.4 Von Bertalanffy model\n\n2.1.4.1 Description\n\\[\n\\frac{dN}{dt} = r \\cdot N(t) ^ {2/3} \\cdot \\left(1 - \\left(\\frac{N(t)}{K}\\right) ^ {(1/3)} \\right)\n\\]\nVariables:\n\\(N\\): population\n\\(K\\): carrying capacity of the environment for the population\n\\(r\\): intrinsic growth rate\n\n\n2.1.4.2 Implementation\n\n\n\n\n\n\n\n\n\n\n\n\n2.1.5 Richards model\n\n2.1.5.1 Description\n\\[\n\\frac{dN}{dt} = r \\cdot N(t) \\cdot \\left(1 - \\left(\\frac{N(t)}{K}\\right) ^ \\beta\\right)\n\\]\nVariables:\n\\(N\\): population\n\\(K\\): carrying capacity of the environment for the population\n\\(r\\): intrinsic growth rate\n\\(\\beta\\): exponential effect 2 (B)\n\n\n2.1.5.2 Implementation\n\n\n\n\n\n\n\n\n\n\n\n\n2.1.6 Gompertz model\n\n2.1.6.1 Description\n\\[\n\\frac{dN}{dt} = \\frac{r}{\\beta^\\gamma} \\cdot N(t) \\cdot \\left(1 - \\left(\\frac{N(t)}{K}\\right) ^ \\beta\\right) ^ \\gamma\n\\]\nVariables:\n\\(N\\): population\n\\(K\\): carrying capacity of the environment for the population\n\\(r\\): intrinsic growth rate\n\\(\\beta\\): exponential effect 2 (B)\n\\(\\gamma\\): exponential effect 3 (C)\n\n\n2.1.6.2 Implementation\n\n\n\n\n\n\n\n\n\n\n\n\n2.1.7 Generalized logistic or Tsoularis model\n\n2.1.7.1 Description\n\\[\n\\frac{dN}{dt} = r \\cdot N(t) ^ \\alpha \\cdot \\left(1 - \\left(\\frac{N(t)}{K}\\right) ^ \\beta\\right) ^ \\gamma\n\\]\nVariables:\n\\(N\\): population\n\\(K\\): carrying capacity of the environment for the population\n\\(r\\): intrinsic growth rate\n\\(\\alpha\\): exponential effect 1 (A) - important when \\(\\beta\\) is low\n\\(\\beta\\): exponential effect 2 (B) - most important\n\\(\\gamma\\): exponential effect 3 (C) - least important\n\n\n2.1.7.2 Implementation",
+    "crumbs": [
+      "Models and scenarios",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Mathusian models</span>"
+    ]
+  },
+  {
+    "objectID": "models-malthusian.html#shenderov-models",
+    "href": "models-malthusian.html#shenderov-models",
+    "title": "2  Mathusian models",
+    "section": "2.2 Shenderov models",
+    "text": "2.2 Shenderov models\nBased on MATHLAB implementation files Quasi_Mathus.m, Mathus2.m, Thetaq.m.\n\n2.2.1 Shenderov model (v1, fix EROI)\n\n2.2.1.1 Description\n\\[\n\\frac{dN}{dt} = k_{Malthus} \\cdot N(t) \\cdot (k_{conversion} \\cdot (\\theta_{cte} - 1) \\cdot R(t) - N(t))\n\\] \\[\n\\frac{dR}{dt} = \\delta - N(t)\n\\]\nVariables:\n\\(N\\): flux value\n\\(R\\): reserve of the critical resource\n\\(k_{Malthus}\\): Malthusian rate constant\n\\(k_{conversion}\\): critical resource conversion rate constant\n\\(\\theta_{cte}\\): EROI value for critical resource\n\\(\\delta\\): replenishment rate of the critical resource\n\n\n2.2.1.2 Implementation\n\n\n\n\n\n\n\n\n\n\n\n\n2.2.2 Shenderov model (v1.1, fix EROI, N-R back conversion)\n\n2.2.2.1 Description\n\\[\n\\frac{dN}{dt} = k_{Malthus} \\cdot N(t) \\cdot (k_{conversion} \\cdot (\\theta_{cte} - 1) \\cdot R(t) - N(t))\n\\] \\[\n\\frac{dR}{dt} = \\delta - \\frac{N(t)}{k_{conversion} \\cdot (\\theta_{cte} - 1)}\n\\]\nVariables:\n\\(N\\): flux value\n\\(R\\): reserve of the critical resource\n\\(k_{Malthus}\\): Malthusian rate constant\n\\(k_{conversion}\\): critical resource conversion rate constant\n\\(\\theta_{cte}\\): EROI value for critical resource\n\\(\\delta\\): replenishment rate of the critical resource\n\n\n2.2.2.2 Implementation\n\n\n\n\n\n\n\n\n\n\n\n\n2.2.3 Shenderov model (v1.2, fix EROI, N-R back conversion, logistic)\n\n2.2.3.1 Description\n\\[\n\\frac{dN}{dt} = k_{Malthus} \\cdot N(t) \\cdot (1 - \\frac{N(t)}{k_{conversion} \\cdot (\\theta_{cte} - 1) \\cdot R(t)})\n\\] \\[\n\\frac{dR}{dt} = \\delta - \\frac{N(t)}{k_{conversion} \\cdot (\\theta_{cte} - 1)}\n\\]\nVariables:\n\\(N\\): flux value\n\\(R\\): reserve of the critical resource\n\\(k_{Malthus}\\): Malthusian rate constant\n\\(k_{conversion}\\): critical resource conversion rate constant\n\\(\\theta_{cte}\\): EROI value for critical resource\n\\(\\delta\\): replenishment rate of the critical resource\n\n\n2.2.3.2 Implementation\n\n\n\n\n\n\n\n\n\n\n\n\n\nTsoularis, A., and J. Wallace. 2002. “Analysis of Logistic Growth Models.” Mathematical Biosciences 179 (1): 21–55. https://doi.org/10.1016/S0025-5564(02)00096-2.",
+    "crumbs": [
+      "Models and scenarios",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Mathusian models</span>"
+    ]
+  },
+  {
+    "objectID": "models-Bardi.html",
+    "href": "models-Bardi.html",
+    "title": "3  Mind Sized World Models",
+    "section": "",
+    "text": "3.1 One-Stock Model: constant rate",
+    "crumbs": [
+      "Models and scenarios",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Mind Sized World Models</span>"
+    ]
+  },
+  {
+    "objectID": "models-Bardi.html#one-stock-model-constant-rate",
+    "href": "models-Bardi.html#one-stock-model-constant-rate",
+    "title": "3  Mind Sized World Models",
+    "section": "",
+    "text": "3.1.1 Description\n\n\n\n\n\n\n\n\n\n\n\n\n\\[\n\\frac{dS}{dt} = - k_1\n\\]\n\n\n\n\nVariables:\n\n\n\n\n\\(S\\): stock\n\n\n\n\n\\(k_1\\): consumption/loss rate\n\n\n\n\n\n3.1.2 Implementation",
+    "crumbs": [
+      "Models and scenarios",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Mind Sized World Models</span>"
+    ]
+  },
+  {
+    "objectID": "models-Bardi.html#one-stock-model-density-dependent-rate",
+    "href": "models-Bardi.html#one-stock-model-density-dependent-rate",
+    "title": "3  Mind Sized World Models",
+    "section": "3.2 One-Stock Model: density-dependent rate",
+    "text": "3.2 One-Stock Model: density-dependent rate\n\n3.2.1 Description\n\n\n\n\n\n\n\n\n\n\n\n\n\\[\n\\frac{dS}{dt} = - k_1 \\cdot S(t)\n\\]\n\n\n\n\nVariables:\n\n\n\n\n\\(S\\): stock\n\n\n\n\n\\(k_1\\): consumption/loss rate\n\n\n\n\n\n3.2.2 Implementation",
+    "crumbs": [
+      "Models and scenarios",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Mind Sized World Models</span>"
+    ]
+  },
+  {
+    "objectID": "models-Bardi.html#one-stock-model-density-dependent-rate-renewable",
+    "href": "models-Bardi.html#one-stock-model-density-dependent-rate-renewable",
+    "title": "3  Mind Sized World Models",
+    "section": "3.3 One-Stock Model: density-dependent rate, renewable",
+    "text": "3.3 One-Stock Model: density-dependent rate, renewable\n\n3.3.1 Description\n\n\n\n\n\n\n\n\\[\n\\frac{dS}{dt} = k_0 - k_1 \\cdot S(t)\n\\]\nVariables:\n\\(S\\): stock\n\\(k_0\\): growth rate\n\\(k_1\\): consumption/loss rate\n\n\n3.3.2 Implementation\n\n\n\n\n\n\n\n\n\n\n\n3.3.3 Reproducing Figure 3 in Bardi (2013)\nk0 = 0, k1 = 5 × 10−3, Stock(init) = 1\n\n\n\n\n\n\n\n\n\n\n\n3.4 Two-Stock Model\n\n3.4.1 Description\n\n\n\n\n\n\n\n\n\n\n\n\n\\[\n\\frac{dR}{dt} = k_0 - k_1 \\cdot R(t) \\cdot N(t) - k_3 \\cdot R(t)\n\\] \\[\n\\frac{dN}{dt} = k_1 \\cdot R(t) \\cdot N(t) - k_2 \\cdot N(t)\n\\]\n\n\n\n\nVariables:\n\n\n\n\n\\(R\\): Natural resource (stock)\n\n\n\n\n\\(N\\): Industrial capital (stock)\n\n\n\n\n\\(k_0\\): Natural resource renewal rate\n\n\n\n\n\\(k_1\\): Natural resource consumption rate\n\n\n\n\n\\(k_2\\): Industrial capital loss rate\n\n\n\n\n\\(k_3\\): Natural resource loss rate\n\n\n\n\n\n3.4.2 Implementation\n\n\n\n\n\n\n\n\n\n\n\n3.4.3 Reproducing Figure 5 in Bardi (2013)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBardi, Ugo. 2013. “Mind Sized World Models.” Sustainability 5 (3): 896–911. https://doi.org/10.3390/su5030896.\n\n\nBardi, Ugo, Sara Falsini, and Ilaria Perissi. 2019. “Toward a General Theory of Societal Collapse: A Biophysical Examination of Tainter’s Model of the Diminishing Returns of Complexity.” BioPhysical Economics and Resource Quality 4 (1): 3. https://doi.org/10.1007/s41247-018-0049-0.",
+    "crumbs": [
+      "Models and scenarios",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Mind Sized World Models</span>"
+    ]
+  },
+  {
+    "objectID": "models-Bardi.html#two-stock-model",
+    "href": "models-Bardi.html#two-stock-model",
+    "title": "3  Mind Sized World Models",
+    "section": "3.4 Two-Stock Model",
+    "text": "3.4 Two-Stock Model\n\n3.4.1 Description\n\n\n\n\n\n\n\n\n\n\n\n\n\\[\n\\frac{dR}{dt} = k_0 - k_1 \\cdot R(t) \\cdot N(t) - k_3 \\cdot R(t)\n\\] \\[\n\\frac{dN}{dt} = k_1 \\cdot R(t) \\cdot N(t) - k_2 \\cdot N(t)\n\\]\n\n\n\n\nVariables:\n\n\n\n\n\\(R\\): Natural resource (stock)\n\n\n\n\n\\(N\\): Industrial capital (stock)\n\n\n\n\n\\(k_0\\): Natural resource renewal rate\n\n\n\n\n\\(k_1\\): Natural resource consumption rate\n\n\n\n\n\\(k_2\\): Industrial capital loss rate\n\n\n\n\n\\(k_3\\): Natural resource loss rate\n\n\n\n\n\n3.4.2 Implementation\n\n\n\n\n\n\n\n\n\n\n\n3.4.3 Reproducing Figure 5 in Bardi (2013)",
+    "crumbs": [
+      "Models and scenarios",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Mind Sized World Models</span>"
+    ]
+  },
+  {
+    "objectID": "models-quasi-malthusian.html",
+    "href": "models-quasi-malthusian.html",
+    "title": "4  Quasi-Mathusian models",
+    "section": "",
+    "text": "4.1 Shenderov models\nBased on MATHLAB implementation files Quasi_Mathus.m, Mathus2.m, Thetaq.m.",
+    "crumbs": [
+      "Models and scenarios",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Quasi-Mathusian models</span>"
+    ]
+  },
+  {
+    "objectID": "models-quasi-malthusian.html#shenderov-models",
+    "href": "models-quasi-malthusian.html#shenderov-models",
+    "title": "4  Quasi-Mathusian models",
+    "section": "",
+    "text": "4.1.1 Shenderov model (v2, increasing EROI)\n\n4.1.1.1 Description\n\\[\n\\frac{dN}{dt} = k_{Malthus} * N(t) * (k_{conversion} * (\\theta_{t} - 1) * R(t) - N(t))\n\\] \\[\n\\frac{dR}{dt} = \\delta - N(t)\n\\]\nwith an varying EROI (\\(\\theta\\))\n\\[\n\\theta_t = (1 - P) * ((2 * \\theta_{max} - \\theta_0 + \\sqrt{(2 * \\theta_{max} - \\theta_0)^2 - \\theta_0^2}) * P + \\theta_0)\n\\]\nwhere\n\\[\nP = \\frac{(R_0 + \\delta * t - R(t))}{(R_0 + \\delta * t)}\n\\] Variables:\n\\(N\\): flux value\n\\(R\\): reserve of the critical resource\n\\(P\\): normalized cumulative production\n\\(k_{Malthus}\\): Malthusian rate constant\n\\(k_{conversion}\\): critical resource conversion rate constant\n\\(\\theta_{0}\\): initial EROI value for critical resource\n\\(\\theta_{max}\\): maximum EROI value for critical resource\n\\(\\delta\\): replenishment rate of the critical resource\n\\(R_0\\): initial reserve of the critical resource\n\n\n4.1.1.2 Implementation\n\n\n\n\n\n\n\n\n\n\n\n\n4.1.2 Shenderov model (v2.2, increasing EROI, N-R back conversion, logistic)\n\n4.1.2.1 Description\n\\[\n\\frac{dN}{dt} = k_{Malthus} * N(t) * (1 - \\frac{N(t)}{k_{conversion} * (\\theta_t - 1) * R(t)})\n\\] \\[\n\\frac{dR}{dt} = \\delta - \\frac{N(t)}{k_{conversion} * (\\theta_{t} - 1)}\n\\]\nwith an varying EROI (\\(\\theta\\))\n\\[\n\\theta_t = (1 - P) * ((2 * \\theta_{max} - \\theta_0 + \\sqrt{(2 * \\theta_{max} - \\theta_0)^2 - \\theta_0^2}) * P + \\theta_0)\n\\]\nwhere\n\\[\nP = \\frac{(R_0 + \\delta * t - R(t))}{(R_0 + \\delta * t)}\n\\] Variables:\n\\(N\\): flux value\n\\(R\\): reserve of the critical resource\n\\(P\\): normalized cumulative production\n\\(k_{Malthus}\\): Malthusian rate constant\n\\(k_{conversion}\\): critical resource conversion rate constant\n\\(\\theta_{0}\\): initial EROI value for critical resource\n\\(\\theta_{max}\\): maximum EROI value for critical resource\n\\(\\delta\\): replenishment rate of the critical resource\n\\(R_0\\): initial reserve of the critical resource\n\n\n4.1.2.2 Implementation\n\n\nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 7.49995, R2 = 1.68701e-16\n \nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 7.49995, R2 = 3.37402e-16\n \nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 7.49995, R2 = 3.37402e-16\n \nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 7.49995, R2 = 2.79611e-16\n \nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 7.49995, R2 = 3.08038e-16\n \nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 7.49995, R2 = 1.25477e-16\n \nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 7.49995, R2 = 1.25477e-16\n \nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 7.49995, R2 = 1.25477e-16\n \nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 7.49995, R2 = 2.6725e-18\n \nDLSODA-  Warning..Internal T (=R1) and H (=R2) are\n      such that in the machine, T + H = T on the next step  \n     (H = step size). Solver will continue anyway.\nIn above message, R1 = 7.49995, R2 = 2.6725e-18\n \nDLSODA-  Above warning has been issued I1 times.  \n     It will not be issued again for this problem.\nIn above message, I1 = 10\n \nDLSODA-  At current T (=R1), MXSTEP (=I1) steps   \n      taken on this call before reaching TOUT     \nIn above message, I1 = 5000\n \nIn above message, R1 = 7.49995\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n4.1.3 v2\n\n\n\n\n\n\n\n\n\n\n\n4.1.4 v3",
+    "crumbs": [
+      "Models and scenarios",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Quasi-Mathusian models</span>"
+    ]
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Bardi, Ugo. 2013. “Mind Sized World\nModels.” Sustainability 5 (3): 896–911. https://doi.org/10.3390/su5030896.\n\n\nBardi, Ugo, Sara Falsini, and Ilaria Perissi. 2019. “Toward a\nGeneral Theory of Societal\nCollapse: A Biophysical\nExamination of Tainter’s Model of\nthe Diminishing Returns of\nComplexity.” BioPhysical Economics and Resource\nQuality 4 (1): 3. https://doi.org/10.1007/s41247-018-0049-0.\n\n\nTsoularis, A., and J. Wallace. 2002. “Analysis of Logistic Growth\nModels.” Mathematical Biosciences 179 (1): 21–55. https://doi.org/10.1016/S0025-5564(02)00096-2.",
+    "crumbs": [
+      "References"
+    ]
+  }
+]
