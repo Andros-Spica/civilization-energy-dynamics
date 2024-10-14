@@ -1,6 +1,4 @@
----
-title: "Mathusian models"
----
+# Mathusian models
 
 ```{r}
 library(deSolve)
@@ -340,7 +338,6 @@ $r$: intrinsic growth rate
 
 $\beta$: exponential effect 2 (`B`)
 
-
 #### Implementation
 
 ```{r}
@@ -559,7 +556,6 @@ ggplot(data = generalisedLogistic_results, aes(x = time)) +
            vjust = 1) +
   ggtitle("Generalised Logistic model")
 ```
-
 
 ## Shenderov models
 
