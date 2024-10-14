@@ -64,5 +64,5 @@ format:
     theme: lumen
     fig-format: svg
     css: assets/styles.css
-  pdf:
-    documentclass: scrreprt
+  #pdf:
+  #  documentclass: scrreprt
