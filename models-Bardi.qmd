@@ -1,3 +1,584 @@
----
-title: "Ugo Bardi's Limits to Growth models"
----
+# Mind Sized World Models
+
+```{r}
+library(deSolve)
+library(ggplot2)
+library(DiagrammeR)
+```
+
+```{r}
+plotScale = 2
+```
+
+This chapter include models that breakdown, variate and extend Bardi's Mind Sized World Models. See original description and discussion [@bardi_mind_2013;@bardi_toward_2019].
+
+## One-Stock Model: constant rate
+
+### Description
+
+::: {layout="[[1,1], [1]]"}
+
+```{r}
+grViz("
+digraph onestock {
+  
+  # Node definitions
+  Stock [shape = box, style = filled, fillcolor = lightblue]
+  Sink [shape = circle, label = '', style = filled, fillcolor = salmon, width = 0.5]
+  node [shape = plain]
+    k1
+  node [shape = invtriangle, label = '', style = filled, fillcolor = grey, width = 0.5]
+    outflow
+  
+  # Edge definitions
+  Stock -> outflow -> Sink [ penwidth = 5]
+  k1 -> outflow [ constraint = false, style = dashed, minlen = 3]
+  
+  # Layout settings
+  rankdir=TB
+    
+  # Position k1 perpendicular to the flow
+  { rank=same; k1; outflow }
+}")
+```
+
+$$
+\frac{dS}{dt} = - k_1
+$$
+
+*Variables*:
+
+$S$: stock
+
+$k_1$: consumption/loss rate
+
+:::
+
+### Implementation
+
+```{r}
+# parameters
+oneStock_v1_pars <- c(
+  k1 = 0.002
+  )
+
+oneStock_v1_pars_text <- paste(names(oneStock_v1_pars), oneStock_v1_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+oneStock_v1_init <- c(S = 1)
+
+# times
+oneStock_v1_times <- seq(0, 450, by = 0.001)
+```
+
+```{r}
+oneStock_v1_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_S <- - k1
+      return(list(c(S = d_S)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+oneStock_v1_results <- data.frame(oneStock_v1_model(pars = oneStock_v1_pars, init = oneStock_v1_init, times = oneStock_v1_times))
+```
+
+```{r}
+maxX = oneStock_v1_results$time[length(oneStock_v1_results$time)]
+maxY = max(c(oneStock_v1_results$N, oneStock_v1_results$R))
+
+ggplot(data = oneStock_v1_results, aes(x = time)) +
+  geom_line(data = oneStock_v1_results, aes(x = time, y = S)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = oneStock_v1_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("One stock model: constant rate")
+```
+
+## One-Stock Model: density-dependent rate
+
+### Description
+
+::: {layout="[[1,1], [1]]"}
+
+```{r}
+grViz("
+digraph onestock {
+  
+  # Node definitions
+  Stock [shape = box, style = filled, fillcolor = lightblue]
+  Sink [shape = circle, label = '', style = filled, fillcolor = salmon, width = 0.5]
+  node [shape = plain]
+    k1
+  node [shape = invtriangle, label = '', style = filled, fillcolor = grey, width = 0.5]
+    outflow
+  
+  # Edge definitions
+  Stock -> outflow -> Sink [ penwidth = 5]
+  Stock -> outflow [ tailport = 'e', headport = 'e', constraint = false, style = dashed]
+  k1 -> outflow [ constraint = false, style = dashed, minlen = 3]
+  
+  # Layout settings
+  rankdir=TB
+    
+  # Position k1 perpendicular to the flow
+  { rank=same; k1; outflow }
+}")
+```
+
+$$
+\frac{dS}{dt} = - k_1 \cdot S(t)
+$$
+
+*Variables*:
+
+$S$: stock
+
+$k_1$: consumption/loss rate
+
+:::
+
+### Implementation
+
+```{r}
+# parameters
+oneStock_v2_pars <- c(
+  k1 = 0.005
+  )
+
+oneStock_v2_pars_text <- paste(names(oneStock_v2_pars), oneStock_v2_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+oneStock_v2_init <- c(S = 1)
+
+# times
+oneStock_v2_times <- seq(0, 450, by = 0.001)
+```
+
+```{r}
+oneStock_v2_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_S <- - k1 * S
+      return(list(c(S = d_S)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+oneStock_v2_results <- data.frame(oneStock_v2_model(pars = oneStock_v2_pars, init = oneStock_v2_init, times = oneStock_v2_times))
+```
+
+```{r}
+maxX = oneStock_v2_results$time[length(oneStock_v2_results$time)]
+maxY = max(c(oneStock_v2_results$N, oneStock_v2_results$R))
+
+ggplot(data = oneStock_v2_results, aes(x = time)) +
+  geom_line(data = oneStock_v2_results, aes(x = time, y = S)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = oneStock_v2_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("One stock model: density-dependent rate")
+```
+
+## One-Stock Model: density-dependent rate, renewable
+
+### Description
+
+::: {layout="[[1,1], [1]]"}
+
+```{r}
+grViz("
+digraph onestock {
+  
+  # Node definitions
+  Stock [shape = box, style = filled, fillcolor = lightblue]
+  Source [shape = circle, label = '', style = filled, fillcolor = lightyellow, width = 0.5]
+  Sink [shape = circle, label = '', style = filled, fillcolor = salmon, width = 0.5]
+  node [shape = plain]
+    k0 k1
+  node [shape = invtriangle, label = '', style = filled, fillcolor = grey, width = 0.5]
+    inflow outflow
+  
+  # Edge definitions
+  Source -> inflow -> Stock -> outflow -> Sink [ penwidth = 5]
+  Stock -> outflow [ tailport = 'e', headport = 'e', constraint = false, style = dashed]
+  k0 -> inflow [ constraint = false, style = dashed, minlen = 3]
+  k1 -> outflow [ constraint = false, style = dashed, minlen = 3]
+  
+  # Layout settings
+  rankdir=TB
+    
+  # Position k0 and k1 perpendicular to the flow
+  { rank=same; k0; inflow }
+  { rank=same; k1; outflow }
+}")
+```
+
+$$
+\frac{dS}{dt} = k_0 - k_1 \cdot S(t)
+$$
+
+*Variables*:
+
+$S$: stock
+
+$k_0$: growth rate
+
+$k_1$: consumption/loss rate
+
+::: {layout="[[1,1], [1]]"}
+
+### Implementation
+
+```{r}
+# parameters
+oneStock_v3_pars <- c(
+  k0 = 0.001, 
+  k1 = 0.005
+  )
+
+oneStock_v3_pars_text <- paste(names(oneStock_v3_pars), oneStock_v3_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+oneStock_v3_init <- c(S = 1)
+
+# times
+oneStock_v3_times <- seq(0, 450, by = 0.001)
+```
+
+```{r}
+oneStock_v3_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_S <- k0 - k1 * S
+      return(list(c(S = d_S)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+oneStock_v3_results <- data.frame(oneStock_v3_model(pars = oneStock_v3_pars, init = oneStock_v3_init, times = oneStock_v3_times))
+```
+
+```{r}
+maxX = oneStock_v3_results$time[length(oneStock_v3_results$time)]
+maxY = max(c(oneStock_v3_results$N, oneStock_v3_results$R))
+
+ggplot(data = oneStock_v3_results, aes(x = time)) +
+  geom_line(data = oneStock_v3_results, aes(x = time, y = S)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = oneStock_v3_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("One stock model: density-dependent rate, renewable")
+```
+
+### Reproducing Figure 3 in @bardi_mind_2013
+
+k0 = 0, k1 = 5 × 10−3, Stock(init) = 1
+
+```{r}
+# parameters
+oneStock_v3_pars <- c(
+  k0 = 0, 
+  k1 = 5E-3
+  )
+
+oneStock_v3_pars_text <- paste(names(oneStock_v3_pars), oneStock_v3_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+oneStock_v3_init <- c(S = 1)
+
+# times
+oneStock_v3_times <- seq(0, 450, by = 0.001)
+```
+
+```{r}
+library(deSolve)
+
+oneStock_v3_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_S <- k0 - k1 * S
+      return(list(c(S = d_S)))  # Return both S and d_S
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+
+# Assuming you have defined oneStock_v3_pars, oneStock_v3_init, and oneStock_v3_times
+oneStock_v3_results <- data.frame(oneStock_v3_model(pars = oneStock_v3_pars, init = oneStock_v3_init, times = oneStock_v3_times))
+```
+
+```{r}
+calculate_differences <- function(x) {
+  n <- length(x)
+  diffs <- numeric(n)
+  diffs[1] <- 0  # Set the first value to 0
+  diffs[2:n] <- diff(x)  # Calculate differences for the rest
+  return(diffs)
+}
+# Calculate the differences and add them as a new column
+oneStock_v3_results$d_S <- abs(calculate_differences(oneStock_v3_results$S))
+oneStock_v3_results$d_S_std <- oneStock_v3_results$d_S / diff(range(oneStock_v3_results$d_S))
+```
+
+
+```{r}
+maxX = oneStock_v3_results$time[length(oneStock_v3_results$time)]
+maxY = max(c(oneStock_v3_results$S, oneStock_v3_results$d_S_std))
+
+ggplot(data = oneStock_v3_results, aes(x = time)) +
+  geom_line(data = oneStock_v3_results, aes(x = time, y = S)) +
+  geom_line(data = oneStock_v3_results, aes(x = time, y = d_S_std), linetype = 4) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = oneStock_v3_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("One stock model: Fig 3 replication")
+```
+
+## Two-Stock Model
+
+### Description
+
+::: {layout="[[1,1], [1]]"}
+
+```{r}
+grViz("
+digraph onestock {
+  
+  # Node definitions
+  Stock1 [shape = box, style = filled, fillcolor = lightblue, label = 'Natural Resources']
+  Stock2 [shape = box, style = filled, fillcolor = lightblue, label = 'Industrial Capital']
+  Source [shape = circle, label = '', style = filled, fillcolor = lightyellow, width = 0.5]
+  Sink1 [shape = circle, label = '', style = filled, fillcolor = salmon, width = 0.5]
+  Sink2 [shape = circle, label = '', style = filled, fillcolor = salmon, width = 0.5]
+  node [shape = plain]
+    k0 k1 k2 k3
+  node [shape = invtriangle, label = '', style = filled, fillcolor = grey, width = 0.5]
+    inflow1 outflow1 interflow12 outflow2
+  
+  # Edge definitions
+  Source -> inflow1 -> Stock1 -> outflow1 -> Sink1 [ penwidth = 5]
+                       Stock1 -> interflow12 -> Stock2 -> outflow2 -> Sink2 [ penwidth = 5]
+  Stock1 -> outflow1 [ tailport = 'w', headport = 'w', constraint = false, style = dashed]
+  Stock1 -> interflow12 [ tailport = 'e', headport = 'e', constraint = false, style = dashed]
+  Stock2 -> interflow12 [ tailport = 'e', headport = 'e', constraint = false, style = dashed]
+  Stock2 -> outflow2 [ tailport = 'e', headport = 'e', constraint = false, style = dashed]
+  
+  k0 -> inflow1 [ constraint = false, style = dashed, minlen = 3]
+  k1 -> interflow12 [ constraint = false, style = dashed, minlen = 3]
+  k2 -> outflow2 [ constraint = false, style = dashed, minlen = 3]
+  k3 -> outflow1 [ constraint = false, style = dashed, minlen = 3]
+  
+  # Layout settings
+  rankdir=TB
+    
+  # Position k0, k1, k2, k3 perpendicular to the flow
+  { rank=same; k0; inflow1 }
+  { rank=same; k1; interflow12 }
+  { rank=same; k2; outflow2 }
+  { rank=same; k3; outflow1 }
+  { rank=same; Sink1; Sink2 }
+}")
+```
+
+$$
+\frac{dR}{dt} = k_0 - k_1 \cdot R(t) \cdot N(t) - k_3 \cdot R(t)
+$$
+$$
+\frac{dN}{dt} = k_1 \cdot R(t) \cdot N(t) - k_2 \cdot N(t)
+$$
+
+*Variables*:
+
+$R$: Natural resource (stock)
+
+$N$: Industrial capital (stock)
+
+$k_0$: Natural resource renewal rate
+
+$k_1$: Natural resource consumption rate
+
+$k_2$: Industrial capital loss rate
+
+$k_3$: Natural resource loss rate
+
+:::
+
+### Implementation
+
+```{r}
+# parameters
+twoStock_v1_pars <- c(
+  k0 = 0.001, 
+  k1 = 0.01,
+  k2 = 0.0001,
+  k3 = 0.0001
+  )
+
+twoStock_v1_pars_text <- paste(names(twoStock_v1_pars), twoStock_v1_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+twoStock_v1_init <- c(R = 1, N = 1)
+
+# times
+twoStock_v1_times <- seq(0, 1200, by = 0.01)
+```
+
+```{r}
+twoStock_v1_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_R <- k0 - k1 * R * N - k3 * R
+      d_N <- k1 * R * N - k2 * N
+      return(list(c(R = d_R, N = d_N)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+twoStock_v1_results <- data.frame(twoStock_v1_model(pars = twoStock_v1_pars, init = twoStock_v1_init, times = twoStock_v1_times))
+```
+
+```{r}
+maxX = twoStock_v1_results$time[length(twoStock_v1_results$time)]
+maxY = max(c(twoStock_v1_results$N, twoStock_v1_results$R))
+
+ggplot(data = twoStock_v1_results, aes(x = time)) +
+  geom_line(data = twoStock_v1_results, aes(x = time, y = R), color = "darkred") +
+  geom_line(data = twoStock_v1_results, aes(x = time, y = N), color = "cyan") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = twoStock_v1_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("Two stock model")
+```
+### Reproducing Figure 5 in @bardi_mind_2013
+
+```{r}
+# parameters
+twoStock_v1_pars <- c(
+  k0 = 0, 
+  k1 = 0.04,
+  k2 = 0.025,
+  k3 = 0
+  )
+
+twoStock_v1_pars_text <- paste(names(twoStock_v1_pars), twoStock_v1_pars, sep = " = ", collapse = "\n")
+
+# initial state 
+twoStock_v1_init <- c(R = 1, N = 1E-4)
+
+# times
+twoStock_v1_times <- seq(0, 1200, by = 0.01)
+```
+
+```{r}
+twoStock_v1_model <- function(pars, init, times = times) {
+  # initial state 
+  state <- init
+  # derivative
+  deriv <- function(t, state, pars) {
+    with(as.list(c(state, pars)), {
+      d_R <- k0 - k1 * R * N - k3 * R
+      d_N <- k1 * R * N - k2 * N
+      return(list(c(R = d_R, N = d_N)))
+    })
+  }
+  # solve
+  ode(y = state, times = times, func = deriv, parms = pars)
+}
+twoStock_v1_results <- data.frame(twoStock_v1_model(pars = twoStock_v1_pars, init = twoStock_v1_init, times = twoStock_v1_times))
+```
+
+```{r}
+maxX = twoStock_v1_results$time[length(twoStock_v1_results$time)]
+twoStock_v1_results$N_std <- twoStock_v1_results$N / diff(range(twoStock_v1_results$N))
+maxY = max(c(twoStock_v1_results$N_std, twoStock_v1_results$R))
+
+ggplot(data = twoStock_v1_results, aes(x = time)) +
+  geom_line(data = twoStock_v1_results, aes(x = time, y = R), color = "darkred") +
+  geom_line(data = twoStock_v1_results, aes(x = time, y = N_std), color = "cyan") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_bw() +
+  theme(
+    axis.title = element_text(size = plotScale * 10),
+    axis.text = element_text(size = plotScale * 10)
+  ) +
+  annotate("text",
+           x = 0.7 * maxX, 
+           y = 0.8 * maxY,
+           label = twoStock_v1_pars_text, 
+           size = 5, 
+           hjust = 0, 
+           vjust = 1) +
+  ggtitle("Two stock model: Fig5 replication")
+```
