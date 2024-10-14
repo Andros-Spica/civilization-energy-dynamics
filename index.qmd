@@ -1,3 +1,1 @@
----
-title: "Front page"
----
+# Summary {.unnumbered}

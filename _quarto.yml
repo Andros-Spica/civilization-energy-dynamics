@@ -7,6 +7,7 @@ editor: visual
 execute: 
   echo: false
   warning: false
+  freeze: auto
 
 book:
   title: "Civilization Energy Dynamics: a semi-stochastic approach"
@@ -29,8 +30,14 @@ book:
       equal-contributor: true
   date: today
   date-format: DD MMMM, YYYY
+  search: true
+  repo-url: https://github.com/Andros-Spica/civilization-energy-dynamics/
+  repo-actions: [edit]
+  downloads: [pdf, epub]
+  sharing: [twitter, facebook]
+  site-url: https://andros-spica.github.io/civilization-energy-dynamics/
   page-navigation: true
-  #site-url: 
+  cover-image: assets/images/AlbedoBase_XL_Amidst_shimmering_ruins_and_crumbling_pillars_a_0.jpg
   chapters:
     - index.qmd
     - introduction.qmd
@@ -49,10 +56,13 @@ book:
 
 bibliography: references.bib
 
+comments:
+  hypothesis: true
+  
 format:
   html:
     theme: lumen
     fig-format: svg
-    #css: styles.css
+    css: assets/styles.css
   pdf:
     documentclass: scrreprt

@@ -1,8 +1,8 @@
----
-title: "Introduction"
----
+# Introduction
 
-### EROI
+
+
+## EROI
 
 <https://en.wikipedia.org/wiki/Energy_return_on_investment>
 
