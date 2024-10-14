@@ -1,0 +1,21 @@
+{
+  "hash": "57fe0985cc6e6cf9b79d393824e94109",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Mind Sized World Models\"\n---\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n\n\n## Mind Sized World Models\n\nSee original description and discussion in @bardi_mind_2013, @bardi_toward_2019.\n\n### One-Stock Model\n\n#### Description\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](models-Bardi_files/figure-pdf/unnamed-chunk-3-1.pdf)\n:::\n:::\n\n\n\n$$\n\\frac{dN}{dt} = k_0 - k_1 \\cdot N(t)\n$$\n\n*Variables*:\n\n$N$: stock\n\n$k_0$: growth rate\n\n$k_1$: consumption/loss rate\n\n#### Implementation\n\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n::: {.cell-output-display}\n![](models-Bardi_files/figure-pdf/unnamed-chunk-6-1.pdf)\n:::\n:::\n\n\n### Two-Stock Model\n\n#### Description\n\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](models-Bardi_files/figure-pdf/unnamed-chunk-7-1.pdf)\n:::\n:::\n\n\n\n$$\n\\frac{dN}{dt} = k_0 - k_1 \\cdot N(t)\n$$\n\n*Variables*:\n\n$N$: stock\n\n$k_0$: growth rate\n\n$k_1$: consumption/loss rate\n\n#### Implementation\n\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n::: {.cell-output-display}\n![](models-Bardi_files/figure-pdf/unnamed-chunk-10-1.pdf)\n:::\n:::\n",
+    "supporting": [
+      "models-Bardi_files\\figure-pdf"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {
+      "knitr": [
+        "{\"type\":\"list\",\"attributes\":{},\"value\":[]}"
+      ]
+    },
+    "preserve": null,
+    "postProcess": false
+  }
+}
