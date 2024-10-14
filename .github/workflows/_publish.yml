@@ -50,6 +50,8 @@ jobs:
             any::deSolve
             any::ggplot2
             any::DiagrammeR
+            any::webshot
+            any::webshot2
       
       # NOTE: If Publishing to GitHub Pages, set the permissions correctly (see top of this yaml)
       - name: Publish to GitHub Pages (and render) 
